@@ -1,7 +1,5 @@
 class Gameboard
   attr_accessor :state, :turns
-  
-  @turns = 0
 
   def initialize
     @state = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
