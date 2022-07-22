@@ -1,48 +1,110 @@
-class Space
-  attr_accessor :entry
-  
-  def initialize(id, entry)
-    @id = id
-    @entry = "#{entry}" 
+class Gameboard
+  attr_accessor :state
+
+  def initialize
+    @state = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
   end
 
-  def make_X
-    @entry = "X"
+  def make_X(choice)
+    @state[choice- 1] = "X"
   end
 
-  def make_O
-    @entry = "O"
+  def make_O(choice)
+    @state[choice - 1] = "O"
   end
+
+  def display_board
+    puts " #{@state[0]} | #{@state[1]} | #{@state[2]} "
+    puts "-----------"
+    puts " #{@state[3]} | #{@state[4]} | #{@state[5]} "
+    puts "-----------"
+    puts " #{@state[6]} | #{@state[7]} | #{@state[8]} "
+  end
+
+  def winner_checker(mark)
+    row_1_checker(mark) || row_2_checker(mark) || row_3_checker(mark) || column_1_checker(mark) || column_2_checker(mark) || column_3_checker(mark) || diagonal_1_checker(mark) || diagonal_2_checker(mark)
+  end
+
+  def row_1_checker(mark)
+    @state[0] == mark && @state[1] == mark && @state[2] == mark
+  end
+
+  def row_2_checker(mark)
+    @state[3] == mark && @state[4] == mark && @state[5] == mark
+  end
+
+  def row_3_checker(mark)
+    @state[6] == mark && @state[7] == mark && @state[8] == mark
+
+  end
+
+  def column_1_checker(mark)
+    @state[0] == mark && @state[3] == mark && @state[6] == mark
+
+  end
+
+  def column_2_checker(mark)
+    @state[1] == mark && @state[4] == mark && @state[7] == mark
+  end
+
+  def column_3_checker(mark)
+    @state[2] == mark && @state[5] == mark && @state[8] == mark
+  end
+
+  def diagonal_1_checker(mark)
+    @state[0] == mark && @state[4] == mark && @state[8] == mark
+  end
+
+  def diagonal_2_checker(mark)
+    @state[2] == mark && @state[4] == mark && @state[6] == mark
+  end
+
 end
-
 
 
 def play_game
   game_is_over = 0
   turn = "X"
-  space_1 = Space.new(1, "1")
-  space_2 = Space.new(2, "2")
-  space_3 = Space.new(3, "3")
-  space_4 = Space.new(4, "4")
-  space_5 = Space.new(5, "5")
-  space_6 = Space.new(6, "6")
-  space_7 = Space.new(7, "7")
-  space_8 = Space.new(8, "8")
-  space_9 = Space.new(9, "9")
-  gameboard = [space_1, space_2, space_3, space_4, space_5, space_6, space_7, space_8, space_9]
-  puts " #{space_1.entry} | #{space_2.entry} | #{space_3.entry} "
+
+  gameboard = Gameboard.new()
+
+  puts " 1 | 2 | 3 "
   puts "-----------"
-  puts " #{space_4.entry} | #{space_5.entry} | #{space_6.entry} "
+  puts " 4 | 5 | 6 "
   puts "-----------"
-  puts " #{space_7.entry} | #{space_8.entry} | #{space_9.entry} "
+  puts " 7 | 8 | 9 "  
 
   while game_is_over == 0
     if turn == "X"
       puts "Player X: Select your square!"
+      selection = gets.chomp.to_i
+      if (1..9) === selection && gameboard.state[selection - 1] != "X" && gameboard.state[selection - 1] != "O"
+        gameboard.make_X(selection)
+      else
+        puts "Doesn't work. Pick again!"
+        next
+      end
+      gameboard.display_board
+      game_is_over = 1 if gameboard.winner_checker("X")
+      turn = "O"
     else 
       puts "Player O: Select your square!"
-      turn = "O"
+      selection = gets.chomp.to_i
+      if (1..9) === selection && gameboard.state[selection - 1] != "X" && gameboard.state[selection - 1] != "O"
+        gameboard.make_O(selection) 
+      else
+        puts "Doesn't work. Pick again!"
+        next
+      end
+      gameboard.display_board
+      game_is_over = -1 if gameboard.winner_checker("O")   
+      turn = "X"
     end
+  end
+  if game_is_over == 1
+    puts "X wins! Congratulations!"
+  else game_is_over == -1
+    puts "O wins! Congratulations!"
   end
 end
 
