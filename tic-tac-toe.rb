@@ -1,16 +1,21 @@
 class Gameboard
-  attr_accessor :state
+  attr_accessor :state, :turns
+  
+  @turns = 0
 
   def initialize
     @state = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+    @turns = 0
   end
 
   def make_X(choice)
     @state[choice- 1] = "X"
+    @turns += 1
   end
 
   def make_O(choice)
     @state[choice - 1] = "O"
+    @turns += 1
   end
 
   def display_board
@@ -85,6 +90,7 @@ def play_game
         next
       end
       gameboard.display_board
+      game_is_over = 2 if gameboard.turns == 9
       game_is_over = 1 if gameboard.winner_checker("X")
       turn = "O"
     else 
@@ -97,14 +103,18 @@ def play_game
         next
       end
       gameboard.display_board
+      game_is_over = 2 if gameboard.turns == 9
       game_is_over = -1 if gameboard.winner_checker("O")   
       turn = "X"
     end
   end
-  if game_is_over == 1
+  case game_is_over 
+  when 1
     puts "X wins! Congratulations!"
-  else game_is_over == -1
+  when -1
     puts "O wins! Congratulations!"
+  else 
+    puts "The game is a tie."
   end
 end
 
